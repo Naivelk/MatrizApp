@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  # Base de datos PostgreSQL
+  postgres:
+    image: postgres:13
+    container_name: matriz_postgres
+    environment:
+      POSTGRES_DB: matriz
+      POSTGRES_USER: matriz_user
+      POSTGRES_PASSWORD: matriz_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/migrations:/docker-entrypoint-initdb.d
+    networks:
+      - matriz_network
+    restart: unless-stopped
+
+  # Backend FastAPI
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: matriz_backend
+    environment:
+      DATABASE_URL: postgresql://matriz_user:matriz_password@postgres:5432/matriz
+      API_PREFIX: /api
+      DEBUG: "True"
+      HOST: 0.0.0.0
+      PORT: 8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    networks:
+      - matriz_network
+    restart: unless-stopped
+    volumes:
+      - ./backend:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # Frontend React
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: matriz_frontend
+    environment:
+      VITE_API_URL: http://localhost:8000/api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - matriz_network
+    restart: unless-stopped
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm run dev -- --host 0.0.0.0
+
+volumes:
+  postgres_data:
+
+networks:
+  matriz_network:
+    driver: bridge

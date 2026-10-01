@@ -1,7 +1,6 @@
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
-from uuid import UUID
 from datetime import date, datetime
 
 from app.core.database import get_db
@@ -261,7 +260,7 @@ def read_matriz_riesgos(
 
 @router.get("/{matriz_riesgos_id}", response_model=MatrizRiesgosExtendido)
 def read_matriz_riesgos_item(
-    matriz_riesgos_id: UUID,
+    matriz_riesgos_id: int,
     db: Session = Depends(get_db)
 ):
     """
@@ -366,7 +365,7 @@ def read_matriz_riesgos_item(
 
 @router.put("/{matriz_riesgos_id}", response_model=MatrizRiesgosInDB)
 def update_matriz_riesgos(
-    matriz_riesgos_id: UUID,
+    matriz_riesgos_id: int,
     matriz_riesgos_in: MatrizRiesgosUpdate,
     db: Session = Depends(get_db)
 ):
@@ -427,7 +426,7 @@ def update_matriz_riesgos(
 
 @router.delete("/{matriz_riesgos_id}", response_model=MatrizRiesgosInDB)
 def delete_matriz_riesgos(
-    matriz_riesgos_id: UUID,
+    matriz_riesgos_id: int,
     db: Session = Depends(get_db)
 ):
     """
@@ -440,3 +439,4 @@ def delete_matriz_riesgos(
     db.delete(db_matriz_riesgos)
     db.commit()
     return db_matriz_riesgos
+

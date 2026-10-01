@@ -439,4 +439,3 @@ def delete_matriz_riesgos(
     db.delete(db_matriz_riesgos)
     db.commit()
     return db_matriz_riesgos
-

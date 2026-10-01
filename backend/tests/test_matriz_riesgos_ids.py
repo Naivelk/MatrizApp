@@ -69,4 +69,3 @@ class MatrizIdsTest(unittest.TestCase):
                     '/api/matriz-riesgos/00000000-0000-0000-0000-000000000001',
                     **({'json': {}} if method == 'put' else {}))
                 self.assertEqual(response.status_code, 422)
-

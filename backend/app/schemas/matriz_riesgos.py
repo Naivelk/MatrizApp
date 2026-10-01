@@ -134,4 +134,3 @@ class MatrizRiesgosExtendido(MatrizRiesgosInDB):
     tipo_control_info: Optional[TipoControlSchema] = None
     valor_activo_info: Optional[ValorActivoSchema] = None
     estado: Optional[str] = None  # Campo calculado para mostrar el estado actual
-
